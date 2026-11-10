@@ -1,0 +1,17 @@
+{
+  "table": "Band",
+  "rows": 30,
+  "status": "checklist for the Mockaroo UI, not an importable Mockaroo file",
+  "fields": [
+    {
+      "name": "StageName",
+      "mockaroo_type": "Dataset Column -> Artist.StageName where ArtistType = band",
+      "constraint": "PK, FK"
+    },
+    {
+      "name": "FormationYear",
+      "mockaroo_type": "Number 1960-2025",
+      "constraint": ""
+    }
+  ]
+}

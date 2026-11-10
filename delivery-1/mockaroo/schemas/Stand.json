@@ -1,0 +1,22 @@
+{
+  "table": "Stand",
+  "rows": 30,
+  "status": "checklist for the Mockaroo UI, not an importable Mockaroo file",
+  "fields": [
+    {
+      "name": "Name",
+      "mockaroo_type": "Custom, unique",
+      "constraint": "PK"
+    },
+    {
+      "name": "Sponsor",
+      "mockaroo_type": "Company Name",
+      "constraint": ""
+    },
+    {
+      "name": "FestivalName",
+      "mockaroo_type": "Dataset Column -> Festival.Name",
+      "constraint": "FK"
+    }
+  ]
+}

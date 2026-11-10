@@ -1,0 +1,17 @@
+{
+  "table": "Sells",
+  "rows": 30,
+  "status": "checklist for the Mockaroo UI, not an importable Mockaroo file",
+  "fields": [
+    {
+      "name": "StandName",
+      "mockaroo_type": "Dataset Column -> Stand.Name",
+      "constraint": "PK, FK"
+    },
+    {
+      "name": "ProductName",
+      "mockaroo_type": "Dataset Column -> Product.Name",
+      "constraint": "PK, FK"
+    }
+  ]
+}

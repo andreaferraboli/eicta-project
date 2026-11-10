@@ -1,0 +1,27 @@
+{
+  "table": "Musician",
+  "rows": 30,
+  "status": "checklist for the Mockaroo UI, not an importable Mockaroo file",
+  "fields": [
+    {
+      "name": "StageName",
+      "mockaroo_type": "Dataset Column -> Artist.StageName where ArtistType = musician",
+      "constraint": "PK, FK"
+    },
+    {
+      "name": "FullName",
+      "mockaroo_type": "Full Name",
+      "constraint": ""
+    },
+    {
+      "name": "Nationality",
+      "mockaroo_type": "Country / Custom List",
+      "constraint": ""
+    },
+    {
+      "name": "MainInstrument",
+      "mockaroo_type": "Custom List",
+      "constraint": ""
+    }
+  ]
+}

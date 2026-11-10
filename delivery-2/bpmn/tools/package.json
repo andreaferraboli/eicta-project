@@ -1,0 +1,13 @@
+{
+  "name": "eicta-bpmn-tools",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Validation of the delivery-2 BPMN diagrams",
+  "scripts": {
+    "validate": "node validate.mjs"
+  },
+  "dependencies": {
+    "bpmn-moddle": "9.0.1"
+  }
+}

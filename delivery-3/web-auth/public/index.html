@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Euphoric Events | Sign in and log in</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 760px; margin: 2rem auto; padding: 0 1rem; color: #1d1b26; }
+    .forms { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+    @media (max-width: 640px) { .forms { grid-template-columns: 1fr; } }
+    form { border: 1px solid #ccc; border-radius: 10px; padding: 1rem 1.2rem; }
+    label { display: block; margin-top: .7rem; font-weight: 600; }
+    input { width: 100%; box-sizing: border-box; padding: .45rem; margin-top: .2rem; }
+    input.invalid { border-color: #c0392b; }
+    .field-error { color: #c0392b; font-size: .85rem; min-height: 1em; }
+    button { margin-top: 1rem; padding: .5rem 1.2rem; }
+    #message { margin: 1.5rem 0; padding: .8rem 1rem; border-radius: 8px; display: none; }
+    #message.ok { display: block; background: #e3f7e8; color: #17602f; }
+    #message.error { display: block; background: #fdecea; color: #8e2a20; }
+  </style>
+</head>
+<body>
+  <h1>Euphoric Events</h1>
+  <p>Create an account or log in.</p>
+  <div id="message" role="status" aria-live="polite"></div>
+
+  <div class="forms">
+    <form id="signup-form" action="/api/signup" method="post" novalidate>
+      <h2>Sign in</h2>
+      <label for="su-name">Name</label>
+      <input id="su-name" name="name" autocomplete="given-name" required maxlength="50">
+      <div class="field-error" data-for="name"></div>
+      <label for="su-surname">Surname</label>
+      <input id="su-surname" name="surname" autocomplete="family-name" required maxlength="50">
+      <div class="field-error" data-for="surname"></div>
+      <label for="su-email">Email</label>
+      <input id="su-email" name="email" type="email" autocomplete="email" required>
+      <div class="field-error" data-for="email"></div>
+      <label for="su-password">Password (at least 8 characters)</label>
+      <input id="su-password" name="password" type="password" autocomplete="new-password" required minlength="8" maxlength="128">
+      <div class="field-error" data-for="password"></div>
+      <button type="submit">Create account</button>
+    </form>
+
+    <form id="login-form" action="/api/login" method="post" novalidate>
+      <h2>Log in</h2>
+      <label for="li-email">Email</label>
+      <input id="li-email" name="email" type="email" autocomplete="email" required>
+      <div class="field-error" data-for="email"></div>
+      <label for="li-password">Password</label>
+      <input id="li-password" name="password" type="password" autocomplete="current-password" required>
+      <div class="field-error" data-for="password"></div>
+      <button type="submit">Log in</button>
+    </form>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>

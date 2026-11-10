@@ -1,0 +1,33 @@
+\chapter{Text Analysis}
+% Source: delivery-1/analysis/text-analysis.md and docs/assumptions.md (DRAFT, review before copying).
+
+\section{Entities}
+\todo{List every entity with its attributes and identifier (table below is a starting point).}
+
+\begin{table}[H]\centering\small
+\begin{tabularx}{\linewidth}{lX}
+\toprule
+Entity & Attributes (identifier first) \\
+\midrule
+Festival & \underline{Name}, Location, StartDate, EndDate \\
+Stage & \underline{Code}, Name, MaxCapacity, LocationDescription \\
+Performance & \underline{PerformanceID}, Title, Genre, StartTime, EndTime \\
+Artist & \underline{StageName}, Country, MainGenre \quad (ISA: Musician, Band) \\
+Musician & FullName, Nationality, MainInstrument \\
+Band & FormationYear \\
+Stand & \underline{Name}, Sponsor \\
+Product & \underline{Name}, Price \quad (ISA: Food, Drink, Merchandise) \\
+Food / Drink & ExpirationDate; Food also Type \\
+Ticket & \underline{TicketID} (artificial), Type, Price, ValidityPeriod \\
+Person & \underline{Email}, FullName, Phone \\
+Purchase & \underline{PurchaseID} (artificial), Date, PaymentMethod \\
+\bottomrule
+\end{tabularx}
+\caption{Entities and attributes (draft).}
+\end{table}
+
+\section{Relationships}
+\todo{List every relationship with its cardinalities and reading direction.}
+
+\section{Assumptions}
+\todo{Copy the reviewed assumptions A-01 \dots{} A-16 from docs/assumptions.md, each with its justification from the text.}

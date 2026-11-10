@@ -1,0 +1,32 @@
+{
+  "table": "Product",
+  "rows": 30,
+  "status": "checklist for the Mockaroo UI, not an importable Mockaroo file",
+  "fields": [
+    {
+      "name": "Name",
+      "mockaroo_type": "Custom, unique",
+      "constraint": "PK"
+    },
+    {
+      "name": "Price",
+      "mockaroo_type": "Number 1-60, 2 decimals",
+      "constraint": "> 0"
+    },
+    {
+      "name": "Category",
+      "mockaroo_type": "Custom List: food, drink, merchandise",
+      "constraint": ""
+    },
+    {
+      "name": "ExpirationDate",
+      "mockaroo_type": "Date, blank when Category = merchandise (Formula)",
+      "constraint": "only food/drink"
+    },
+    {
+      "name": "FoodType",
+      "mockaroo_type": "Custom List, blank unless Category = food",
+      "constraint": "only food"
+    }
+  ]
+}

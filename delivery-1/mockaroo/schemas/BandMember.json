@@ -1,0 +1,17 @@
+{
+  "table": "BandMember",
+  "rows": 30,
+  "status": "checklist for the Mockaroo UI, not an importable Mockaroo file",
+  "fields": [
+    {
+      "name": "BandName",
+      "mockaroo_type": "Dataset Column -> Band.StageName",
+      "constraint": "PK, FK"
+    },
+    {
+      "name": "MusicianName",
+      "mockaroo_type": "Dataset Column -> Musician.StageName",
+      "constraint": "PK, FK; >= 2 per band"
+    }
+  ]
+}

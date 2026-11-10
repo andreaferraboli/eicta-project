@@ -1,0 +1,83 @@
+\chapter{Queries}
+\todo{For each query: check the title, expand the description, add the screenshot of the result.}
+
+\section{Large-capacity stages}
+\textbf{Requirement:} a. WHERE.
+
+\textbf{Description.} Lists the stages that can host at least 5000 people, with the festival they belong to. The WHERE clause filters on MaxCapacity. \todo{review and expand the description}
+
+\lstinputlisting[language=SQL,firstline=7]{../sql/queries/q01_where.sql}
+\evidence{q01_where.png}{Result of the query ``Large-capacity stages''.}{fig:q01_where}
+
+\section{Cheapest vegetarian or vegan food items}
+\textbf{Requirement:} b. WHERE, LIMIT, LIKE.
+
+\textbf{Description.} Selects food products whose type starts with 'veg' (vegetarian, vegan) using LIKE, and returns only the first five by price with LIMIT. ORDER BY is added only to make LIMIT deterministic. \todo{review and expand the description}
+
+\lstinputlisting[language=SQL,firstline=7]{../sql/queries/q02_where_limit_like.sql}
+\evidence{q02_where_limit_like.png}{Result of the query ``Cheapest vegetarian or vegan food items''.}{fig:q02_where_limit_like}
+
+\section{People who bought at least one VIP ticket}
+\textbf{Requirement:} c. WHERE, IN, Nested Query.
+
+\textbf{Description.} The inner query finds the purchases containing a VIP ticket; the outer queries keep the people who made one of those purchases. \todo{review and expand the description}
+
+\lstinputlisting[language=SQL,firstline=7]{../sql/queries/q03_where_in_nested.sql}
+\evidence{q03_where_in_nested.png}{Result of the query ``People who bought at least one VIP ticket''.}{fig:q03_where_in_nested}
+
+\section{Stages and total capacity per festival}
+\textbf{Requirement:} d. GROUP BY, 1 JOIN, AS.
+
+\textbf{Description.} Joins festivals with their stages and groups by festival, counting the stages and summing their capacity. AS renames tables and computed columns. \todo{review and expand the description}
+
+\lstinputlisting[language=SQL,firstline=7]{../sql/queries/q04_groupby_1join_as.sql}
+\evidence{q04_groupby_1join_as.png}{Result of the query ``Stages and total capacity per festival''.}{fig:q04_groupby_1join_as}
+
+\section{Tickets per type for festivals from July 2026}
+\textbf{Requirement:} e. WHERE, GROUP BY.
+
+\textbf{Description.} Keeps only the tickets valid from 1 July 2026 onward and counts them per ticket type. \todo{review and expand the description}
+
+\lstinputlisting[language=SQL,firstline=7]{../sql/queries/q05_where_groupby.sql}
+\evidence{q05_where_groupby.png}{Result of the query ``Tickets per type for festivals from July 2026''.}{fig:q05_where_groupby}
+
+\section{Most programmed genres}
+\textbf{Requirement:} f. GROUP BY, HAVING, AS.
+
+\textbf{Description.} Counts performances per genre and keeps only the genres with at least 10 performances. \todo{review and expand the description}
+
+\lstinputlisting[language=SQL,firstline=7]{../sql/queries/q06_groupby_having_as.sql}
+\evidence{q06_groupby_having_as.png}{Result of the query ``Most programmed genres''.}{fig:q06_groupby_having_as}
+
+\section{Popular payment methods from June 2026}
+\textbf{Requirement:} g. WHERE, GROUP BY, HAVING, AS.
+
+\textbf{Description.} Considers purchases made from 1 June 2026, groups them by payment method and keeps the methods used more than 5 times. \todo{review and expand the description}
+
+\lstinputlisting[language=SQL,firstline=7]{../sql/queries/q07_where_groupby_having_as.sql}
+\evidence{q07_where_groupby_having_as.png}{Result of the query ``Popular payment methods from June 2026''.}{fig:q07_where_groupby_having_as}
+
+\section{Performances on above-average stages}
+\textbf{Requirement:} h. WHERE, Nested Query, GROUP BY.
+
+\textbf{Description.} The nested query computes the average stage capacity; the WHERE keeps performances held on stages above that average; GROUP BY counts them per stage. \todo{review and expand the description}
+
+\lstinputlisting[language=SQL,firstline=7]{../sql/queries/q08_where_nested_groupby.sql}
+\evidence{q08_where_nested_groupby.png}{Result of the query ``Performances on above-average stages''.}{fig:q08_where_nested_groupby}
+
+\section{Large bands formed before 2000}
+\textbf{Requirement:} i. WHERE, GROUP BY, HAVING, 1 JOIN.
+
+\textbf{Description.} Joins bands with their members, keeps bands formed before 2000 and returns those with at least 3 members. \todo{review and expand the description}
+
+\lstinputlisting[language=SQL,firstline=7]{../sql/queries/q09_where_groupby_having_1join.sql}
+\evidence{q09_where_groupby_having_1join.png}{Result of the query ``Large bands formed before 2000''.}{fig:q09_where_groupby_having_1join}
+
+\section{Stands selling the most food and drinks}
+\textbf{Requirement:} j. WHERE, GROUP BY, HAVING, 2 JOINs.
+
+\textbf{Description.} Joins stands with the items sold and with the product catalogue, keeps food and drink items and returns the stands with at least 2 such items sold. \todo{review and expand the description}
+
+\lstinputlisting[language=SQL,firstline=7]{../sql/queries/q10_where_groupby_having_2joins.sql}
+\evidence{q10_where_groupby_having_2joins.png}{Result of the query ``Stands selling the most food and drinks''.}{fig:q10_where_groupby_having_2joins}
+

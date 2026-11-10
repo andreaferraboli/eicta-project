@@ -1,0 +1,27 @@
+{
+  "table": "Festival",
+  "rows": 30,
+  "status": "checklist for the Mockaroo UI, not an importable Mockaroo file",
+  "fields": [
+    {
+      "name": "Name",
+      "mockaroo_type": "Custom List / Formula: unique festival names",
+      "constraint": "PK"
+    },
+    {
+      "name": "Location",
+      "mockaroo_type": "City",
+      "constraint": ""
+    },
+    {
+      "name": "StartDate",
+      "mockaroo_type": "Date (format yyyy-mm-dd)",
+      "constraint": ""
+    },
+    {
+      "name": "EndDate",
+      "mockaroo_type": "Formula: date(StartDate) + 2..3 days",
+      "constraint": "EndDate >= StartDate"
+    }
+  ]
+}

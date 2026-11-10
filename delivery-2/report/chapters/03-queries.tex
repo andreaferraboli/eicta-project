@@ -1,0 +1,125 @@
+\chapter{Queries}
+\section*{Create, update and delete}
+\addcontentsline{toc}{section}{Create, update and delete}
+\section{Create a new festival with two stages}
+\textbf{Requirement:} CREATE.
+
+\textbf{Description.} Creates a new festival and two stages connected to it. \todo{review and expand the description}
+
+\lstinputlisting[language=Cypher,firstline=6]{../neo4j/cypher/queries/write/w01_create_festival_with_stages.cypher}
+\evidence{w01_create_festival_with_stages.png}{Result of the query ``Create a new festival with two stages''.}{fig:w01_create_festival_with_stages}
+
+\section{Schedule a performance with existing artists}
+\textbf{Requirement:} CREATE.
+
+\textbf{Description.} Creates a performance on the new Ice Dome stage and links two existing artists to it. \todo{review and expand the description}
+
+\lstinputlisting[language=Cypher,firstline=6]{../neo4j/cypher/queries/write/w02_create_performance_for_existing_artists.cypher}
+\evidence{w02_create_performance_for_existing_artists.png}{Result of the query ``Schedule a performance with existing artists''.}{fig:w02_create_performance_for_existing_artists}
+
+\section{Increase capacity of small stages}
+\textbf{Requirement:} UPDATE.
+
+\textbf{Description.} Raises by 10\% the capacity of stages with fewer than 1000 places. \todo{review and expand the description}
+
+\lstinputlisting[language=Cypher,firstline=6]{../neo4j/cypher/queries/write/w03_update_stage_capacity.cypher}
+\evidence{w03_update_stage_capacity.png}{Result of the query ``Increase capacity of small stages''.}{fig:w03_update_stage_capacity}
+
+\section{Discount merchandise sold at the earliest festival}
+\textbf{Requirement:} UPDATE.
+
+\textbf{Description.} Applies a 20\% discount to merchandise sold by stands of the earliest festival. \todo{review and expand the description}
+
+\lstinputlisting[language=Cypher,firstline=6]{../neo4j/cypher/queries/write/w04_update_merchandise_prices.cypher}
+\evidence{w04_update_merchandise_prices.png}{Result of the query ``Discount merchandise sold at the earliest festival''.}{fig:w04_update_merchandise_prices}
+
+\section{Delete the demo winter festival}
+\textbf{Requirement:} DELETE.
+
+\textbf{Description.} Deletes the festival created by w01 with its stages and the performance created by w02 (DETACH DELETE removes the relationships too). \todo{review and expand the description}
+
+\lstinputlisting[language=Cypher,firstline=6]{../neo4j/cypher/queries/write/w05_delete_demo_festival.cypher}
+\evidence{w05_delete_demo_festival.png}{Result of the query ``Delete the demo winter festival''.}{fig:w05_delete_demo_festival}
+
+\section*{Retrieval}
+\addcontentsline{toc}{section}{Retrieval}
+\section{Large stages of summer festivals}
+\textbf{Requirement:} 2 nodes in MATCH + conditions (1/2).
+
+\textbf{Description.} Stages with capacity of at least 5000 that belong to festivals starting in June 2026 or later. \todo{review and expand the description}
+
+\lstinputlisting[language=Cypher,firstline=6]{../neo4j/cypher/queries/read/r01_match2_cond_large_stages.cypher}
+\evidence{r01_match2_cond_large_stages.png}{Result of the query ``Large stages of summer festivals''.}{fig:r01_match2_cond_large_stages}
+
+\section{Guitarists and drummers in bands formed before 2000}
+\textbf{Requirement:} 2 nodes in MATCH + conditions (2/2).
+
+\textbf{Description.} Musicians playing guitar or drums who are members of a band formed before 2000. \todo{review and expand the description}
+
+\lstinputlisting[language=Cypher,firstline=6]{../neo4j/cypher/queries/read/r02_match2_cond_band_members.cypher}
+\evidence{r02_match2_cond_band_members.png}{Result of the query ``Guitarists and drummers in bands formed before 2000''.}{fig:r02_match2_cond_band_members}
+
+\section{Rock and metal performances per stage}
+\textbf{Requirement:} 2 nodes in MATCH + conditions + aggregation, no WITH (1/2).
+
+\textbf{Description.} Counts, for each stage, the performances of genre rock or metal. \todo{review and expand the description}
+
+\lstinputlisting[language=Cypher,firstline=6]{../neo4j/cypher/queries/read/r03_match2_cond_agg_genre_per_stage.cypher}
+\evidence{r03_match2_cond_agg_genre_per_stage.png}{Result of the query ``Rock and metal performances per stage''.}{fig:r03_match2_cond_agg_genre_per_stage}
+
+\section{Average food and drink price per sponsor}
+\textbf{Requirement:} 2 nodes in MATCH + conditions + aggregation, no WITH (2/2).
+
+\textbf{Description.} For food and drink products, average price and number of products sold by stands, grouped by stand sponsor. \todo{review and expand the description}
+
+\lstinputlisting[language=Cypher,firstline=6]{../neo4j/cypher/queries/read/r04_match2_cond_agg_price_per_sponsor.cypher}
+\evidence{r04_match2_cond_agg_price_per_sponsor.png}{Result of the query ``Average food and drink price per sponsor''.}{fig:r04_match2_cond_agg_price_per_sponsor}
+
+\section{Artists often playing outside their main genre}
+\textbf{Requirement:} 2 nodes in MATCH + conditions + one WITH (1/2).
+
+\textbf{Description.} Counts the performances whose genre differs from the main genre of the artist, keeping artists with at least 2 of them. \todo{review and expand the description}
+
+\lstinputlisting[language=Cypher,firstline=6]{../neo4j/cypher/queries/read/r05_match2_cond_with_off_genre.cypher}
+\evidence{r05_match2_cond_with_off_genre.png}{Result of the query ``Artists often playing outside their main genre''.}{fig:r05_match2_cond_with_off_genre}
+
+\section{People paying electronically more than once}
+\textbf{Requirement:} 2 nodes in MATCH + conditions + one WITH (2/2).
+
+\textbf{Description.} People with at least 2 purchases paid with a method other than cash. \todo{review and expand the description}
+
+\lstinputlisting[language=Cypher,firstline=6]{../neo4j/cypher/queries/read/r06_match2_cond_with_card_buyers.cypher}
+\evidence{r06_match2_cond_with_card_buyers.png}{Result of the query ``People paying electronically more than once''.}{fig:r06_match2_cond_with_card_buyers}
+
+\section{Touring artists across summer festivals}
+\textbf{Requirement:} 3+ nodes in MATCH + conditions + multiple WITH (1/2).
+
+\textbf{Description.} Artists performing at 2 or more distinct festivals starting from June 2026; the second WITH ranks them and keeps the top 5. \todo{review and expand the description}
+
+\lstinputlisting[language=Cypher,firstline=6]{../neo4j/cypher/queries/read/r07_match3_cond_multiwith_touring_artists.cypher}
+\evidence{r07_match3_cond_multiwith_touring_artists.png}{Result of the query ``Touring artists across summer festivals''.}{fig:r07_match3_cond_multiwith_touring_artists}
+
+\section{Ticket revenue per festival}
+\textbf{Requirement:} 3+ nodes in MATCH + conditions + multiple WITH (2/2).
+
+\textbf{Description.} Revenue from regular and VIP tickets per festival; a second WITH derives the average ticket price and keeps festivals above 100 of revenue. \todo{review and expand the description}
+
+\lstinputlisting[language=Cypher,firstline=6]{../neo4j/cypher/queries/read/r08_match3_cond_multiwith_ticket_revenue.cypher}
+\evidence{r08_match3_cond_multiwith_ticket_revenue.png}{Result of the query ``Ticket revenue per festival''.}{fig:r08_match3_cond_multiwith_ticket_revenue}
+
+\section{People connected to festivals in Milano or Roma}
+\textbf{Requirement:} variable-length path in MATCH + conditions.
+
+\textbf{Description.} Follows directed paths of 1 to 3 relationships from a person to a festival (Person-MADE-Purchase-INCLUDES-Ticket-VALID\_FOR-Festival) for festivals located in Milano or Roma. \todo{review and expand the description}
+
+\lstinputlisting[language=Cypher,firstline=6]{../neo4j/cypher/queries/read/r09_varlength_people_reaching_festival.cypher}
+\evidence{r09_varlength_people_reaching_festival.png}{Result of the query ``People connected to festivals in Milano or Roma''.}{fig:r09_varlength_people_reaching_festival}
+
+\section{Shortest connection between two artists}
+\textbf{Requirement:} shortest path.
+
+\textbf{Description.} Picks the first musician and the last band by stage name and computes the shortest path between them through performances and band memberships. \todo{review and expand the description}
+
+\lstinputlisting[language=Cypher,firstline=6]{../neo4j/cypher/queries/read/r10_shortest_path_between_artists.cypher}
+\evidence{r10_shortest_path_between_artists.png}{Result of the query ``Shortest connection between two artists''.}{fig:r10_shortest_path_between_artists}
+

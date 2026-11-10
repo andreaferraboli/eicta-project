@@ -1,0 +1,37 @@
+{
+  "table": "Performance",
+  "rows": 30,
+  "status": "checklist for the Mockaroo UI, not an importable Mockaroo file",
+  "fields": [
+    {
+      "name": "PerformanceID",
+      "mockaroo_type": "Row Number",
+      "constraint": "PK"
+    },
+    {
+      "name": "Title",
+      "mockaroo_type": "Custom / Words",
+      "constraint": ""
+    },
+    {
+      "name": "Genre",
+      "mockaroo_type": "Custom List",
+      "constraint": ""
+    },
+    {
+      "name": "StartTime",
+      "mockaroo_type": "Datetime (yyyy-mm-dd HH:MM)",
+      "constraint": "inside festival dates"
+    },
+    {
+      "name": "EndTime",
+      "mockaroo_type": "Formula: StartTime + minutes",
+      "constraint": "EndTime > StartTime"
+    },
+    {
+      "name": "StageCode",
+      "mockaroo_type": "Dataset Column -> Stage.Code",
+      "constraint": "FK"
+    }
+  ]
+}

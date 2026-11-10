@@ -1,0 +1,27 @@
+{
+  "table": "Artist",
+  "rows": 30,
+  "status": "checklist for the Mockaroo UI, not an importable Mockaroo file",
+  "fields": [
+    {
+      "name": "StageName",
+      "mockaroo_type": "App Name / Custom, unique",
+      "constraint": "PK"
+    },
+    {
+      "name": "Country",
+      "mockaroo_type": "Country",
+      "constraint": ""
+    },
+    {
+      "name": "MainGenre",
+      "mockaroo_type": "Custom List (rock, jazz, electronic, ...)",
+      "constraint": ""
+    },
+    {
+      "name": "ArtistType",
+      "mockaroo_type": "Custom List: musician, band",
+      "constraint": "discriminator"
+    }
+  ]
+}

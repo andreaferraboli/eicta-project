@@ -1,0 +1,32 @@
+{
+  "table": "Stage",
+  "rows": 30,
+  "status": "checklist for the Mockaroo UI, not an importable Mockaroo file",
+  "fields": [
+    {
+      "name": "Code",
+      "mockaroo_type": "Character Sequence (e.g. ST###A)",
+      "constraint": "PK"
+    },
+    {
+      "name": "Name",
+      "mockaroo_type": "Custom List",
+      "constraint": ""
+    },
+    {
+      "name": "MaxCapacity",
+      "mockaroo_type": "Number 500-15000",
+      "constraint": ""
+    },
+    {
+      "name": "LocationDescription",
+      "mockaroo_type": "Custom List",
+      "constraint": ""
+    },
+    {
+      "name": "FestivalName",
+      "mockaroo_type": "Dataset Column -> Festival.Name",
+      "constraint": "FK, >= 2 stages per festival"
+    }
+  ]
+}

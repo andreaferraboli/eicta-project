@@ -1,0 +1,700 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_StoreAndStore" targetNamespace="http://bpmn.io/schema/bpmn" exporter="build_bpmn.py (draft)" exporterVersion="1.0">
+  <bpmn:collaboration id="Collaboration_1">
+    <bpmn:participant id="Pool_Customer" name="Customer" processRef="Process_Pool_Customer" />
+    <bpmn:participant id="Pool_Store" name="Store&amp;Store" processRef="Process_Pool_Store" />
+    <bpmn:participant id="Pool_Supplier" name="External Supplier" />
+    <bpmn:messageFlow id="Msg_c_ask_s_start" name="product request" sourceRef="c_ask" targetRef="s_start" />
+    <bpmn:messageFlow id="Msg_s_sendlist_c_recvlist" name="product list" sourceRef="s_sendlist" targetRef="c_recvlist" />
+    <bpmn:messageFlow id="Msg_c_send_s_recvorder" name="order" sourceRef="c_send" targetRef="s_recvorder" />
+    <bpmn:messageFlow id="Msg_s_notify_c_oos" name="out-of-stock notification" sourceRef="s_notify" targetRef="c_oos" />
+    <bpmn:messageFlow id="Msg_c_update_s_recvupd" name="updated shopping list" sourceRef="c_update" targetRef="s_recvupd" />
+    <bpmn:messageFlow id="Msg_s_ready_c_ready" name="order ready" sourceRef="s_ready" targetRef="c_ready" />
+    <bpmn:messageFlow id="Msg_s_ship_c_recvship" name="shipment" sourceRef="s_ship" targetRef="c_recvship" />
+    <bpmn:messageFlow id="Msg_c_return_s_ret" name="returned items" sourceRef="c_return" targetRef="s_ret" />
+    <bpmn:messageFlow id="Msg_s_supplier_Pool_Supplier" name="supply order" sourceRef="s_supplier" targetRef="Pool_Supplier" />
+  </bpmn:collaboration>
+  <bpmn:process id="Process_Pool_Customer" isExecutable="false">
+    <bpmn:laneSet id="LaneSet_Pool_Customer">
+      <bpmn:lane id="Lane_Customer" name="Customer">
+        <bpmn:flowNodeRef>c_start</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>c_ask</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>c_recvlist</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>c_prepare</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>c_send</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>c_evgw</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>c_oos</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>c_update</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>c_ready</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>c_recvship</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>c_gw</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>c_return</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>c_end_ret</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>c_end_ok</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="c_start" name="Products needed">
+      <bpmn:outgoing>Flow_c_start_c_ask</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sendTask id="c_ask" name="Ask for available products">
+      <bpmn:incoming>Flow_c_start_c_ask</bpmn:incoming>
+      <bpmn:outgoing>Flow_c_ask_c_recvlist</bpmn:outgoing>
+    </bpmn:sendTask>
+    <bpmn:receiveTask id="c_recvlist" name="Receive product list">
+      <bpmn:incoming>Flow_c_ask_c_recvlist</bpmn:incoming>
+      <bpmn:outgoing>Flow_c_recvlist_c_prepare</bpmn:outgoing>
+    </bpmn:receiveTask>
+    <bpmn:userTask id="c_prepare" name="Prepare order">
+      <bpmn:incoming>Flow_c_recvlist_c_prepare</bpmn:incoming>
+      <bpmn:outgoing>Flow_c_prepare_c_send</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sendTask id="c_send" name="Send order">
+      <bpmn:incoming>Flow_c_prepare_c_send</bpmn:incoming>
+      <bpmn:outgoing>Flow_c_send_c_evgw</bpmn:outgoing>
+    </bpmn:sendTask>
+    <bpmn:eventBasedGateway id="c_evgw" name="">
+      <bpmn:incoming>Flow_c_send_c_evgw</bpmn:incoming>
+      <bpmn:incoming>Flow_c_update_c_evgw</bpmn:incoming>
+      <bpmn:outgoing>Flow_c_evgw_c_oos</bpmn:outgoing>
+      <bpmn:outgoing>Flow_c_evgw_c_ready</bpmn:outgoing>
+    </bpmn:eventBasedGateway>
+    <bpmn:intermediateCatchEvent id="c_oos" name="Out-of-stock notice">
+      <bpmn:incoming>Flow_c_evgw_c_oos</bpmn:incoming>
+      <bpmn:outgoing>Flow_c_oos_c_update</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MED_c_oos" />
+    </bpmn:intermediateCatchEvent>
+    <bpmn:sendTask id="c_update" name="Update and send shopping list">
+      <bpmn:incoming>Flow_c_oos_c_update</bpmn:incoming>
+      <bpmn:outgoing>Flow_c_update_c_evgw</bpmn:outgoing>
+    </bpmn:sendTask>
+    <bpmn:intermediateCatchEvent id="c_ready" name="Order ready notice">
+      <bpmn:incoming>Flow_c_evgw_c_ready</bpmn:incoming>
+      <bpmn:outgoing>Flow_c_ready_c_recvship</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MED_c_ready" />
+    </bpmn:intermediateCatchEvent>
+    <bpmn:receiveTask id="c_recvship" name="Receive order">
+      <bpmn:incoming>Flow_c_ready_c_recvship</bpmn:incoming>
+      <bpmn:outgoing>Flow_c_recvship_c_gw</bpmn:outgoing>
+    </bpmn:receiveTask>
+    <bpmn:exclusiveGateway id="c_gw" name="Defective items?">
+      <bpmn:incoming>Flow_c_recvship_c_gw</bpmn:incoming>
+      <bpmn:outgoing>Flow_c_gw_c_return</bpmn:outgoing>
+      <bpmn:outgoing>Flow_c_gw_c_end_ok</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sendTask id="c_return" name="Return items">
+      <bpmn:incoming>Flow_c_gw_c_return</bpmn:incoming>
+      <bpmn:outgoing>Flow_c_return_c_end_ret</bpmn:outgoing>
+    </bpmn:sendTask>
+    <bpmn:endEvent id="c_end_ret" name="Items returned">
+      <bpmn:incoming>Flow_c_return_c_end_ret</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:endEvent id="c_end_ok" name="Order kept">
+      <bpmn:incoming>Flow_c_gw_c_end_ok</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_c_start_c_ask" name="" sourceRef="c_start" targetRef="c_ask" />
+    <bpmn:sequenceFlow id="Flow_c_ask_c_recvlist" name="" sourceRef="c_ask" targetRef="c_recvlist" />
+    <bpmn:sequenceFlow id="Flow_c_recvlist_c_prepare" name="" sourceRef="c_recvlist" targetRef="c_prepare" />
+    <bpmn:sequenceFlow id="Flow_c_prepare_c_send" name="" sourceRef="c_prepare" targetRef="c_send" />
+    <bpmn:sequenceFlow id="Flow_c_send_c_evgw" name="" sourceRef="c_send" targetRef="c_evgw" />
+    <bpmn:sequenceFlow id="Flow_c_evgw_c_oos" name="" sourceRef="c_evgw" targetRef="c_oos" />
+    <bpmn:sequenceFlow id="Flow_c_oos_c_update" name="" sourceRef="c_oos" targetRef="c_update" />
+    <bpmn:sequenceFlow id="Flow_c_update_c_evgw" name="" sourceRef="c_update" targetRef="c_evgw" />
+    <bpmn:sequenceFlow id="Flow_c_evgw_c_ready" name="" sourceRef="c_evgw" targetRef="c_ready" />
+    <bpmn:sequenceFlow id="Flow_c_ready_c_recvship" name="" sourceRef="c_ready" targetRef="c_recvship" />
+    <bpmn:sequenceFlow id="Flow_c_recvship_c_gw" name="" sourceRef="c_recvship" targetRef="c_gw" />
+    <bpmn:sequenceFlow id="Flow_c_gw_c_return" name="yes" sourceRef="c_gw" targetRef="c_return" />
+    <bpmn:sequenceFlow id="Flow_c_return_c_end_ret" name="" sourceRef="c_return" targetRef="c_end_ret" />
+    <bpmn:sequenceFlow id="Flow_c_gw_c_end_ok" name="no" sourceRef="c_gw" targetRef="c_end_ok" />
+  </bpmn:process>
+  <bpmn:process id="Process_Pool_Store" isExecutable="false">
+    <bpmn:laneSet id="LaneSet_Pool_Store">
+      <bpmn:lane id="Lane_CS" name="Customer Service">
+        <bpmn:flowNodeRef>s_start</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>s_fwd</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>s_sendlist</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>s_recvorder</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>s_notify</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>s_recvupd</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>s_ready</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>s_evgw</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>s_ret</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>s_report</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>s_end_ret</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>s_week</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>s_record</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>s_end_ok</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_IM" name="Inventory Management">
+        <bpmn:flowNodeRef>s_retrieve</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>s_merge1</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>s_check</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>s_avail</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>s_low</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>s_supplier</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>s_merge2</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>s_pack</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>s_all</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_LG" name="Logistics">
+        <bpmn:flowNodeRef>s_ship</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="s_start" name="Product request received">
+      <bpmn:outgoing>Flow_s_start_s_fwd</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MED_s_start" />
+    </bpmn:startEvent>
+    <bpmn:task id="s_fwd" name="Forward request to inventory management">
+      <bpmn:incoming>Flow_s_start_s_fwd</bpmn:incoming>
+      <bpmn:outgoing>Flow_s_fwd_s_retrieve</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="s_retrieve" name="Retrieve list of available products">
+      <bpmn:incoming>Flow_s_fwd_s_retrieve</bpmn:incoming>
+      <bpmn:outgoing>Flow_s_retrieve_s_sendlist</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sendTask id="s_sendlist" name="Send product list">
+      <bpmn:incoming>Flow_s_retrieve_s_sendlist</bpmn:incoming>
+      <bpmn:outgoing>Flow_s_sendlist_s_recvorder</bpmn:outgoing>
+    </bpmn:sendTask>
+    <bpmn:receiveTask id="s_recvorder" name="Receive order">
+      <bpmn:incoming>Flow_s_sendlist_s_recvorder</bpmn:incoming>
+      <bpmn:outgoing>Flow_s_recvorder_s_merge1</bpmn:outgoing>
+    </bpmn:receiveTask>
+    <bpmn:exclusiveGateway id="s_merge1" name="">
+      <bpmn:incoming>Flow_s_recvorder_s_merge1</bpmn:incoming>
+      <bpmn:incoming>Flow_s_recvupd_s_merge1</bpmn:incoming>
+      <bpmn:incoming>Flow_s_all_s_merge1</bpmn:incoming>
+      <bpmn:outgoing>Flow_s_merge1_s_check</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:task id="s_check" name="Check availability of next product">
+      <bpmn:incoming>Flow_s_merge1_s_check</bpmn:incoming>
+      <bpmn:outgoing>Flow_s_check_s_avail</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="s_avail" name="Product available?">
+      <bpmn:incoming>Flow_s_check_s_avail</bpmn:incoming>
+      <bpmn:outgoing>Flow_s_avail_s_notify</bpmn:outgoing>
+      <bpmn:outgoing>Flow_s_avail_s_low</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sendTask id="s_notify" name="Notify customer: product not in stock">
+      <bpmn:incoming>Flow_s_avail_s_notify</bpmn:incoming>
+      <bpmn:outgoing>Flow_s_notify_s_recvupd</bpmn:outgoing>
+    </bpmn:sendTask>
+    <bpmn:receiveTask id="s_recvupd" name="Receive updated shopping list">
+      <bpmn:incoming>Flow_s_notify_s_recvupd</bpmn:incoming>
+      <bpmn:outgoing>Flow_s_recvupd_s_merge1</bpmn:outgoing>
+    </bpmn:receiveTask>
+    <bpmn:exclusiveGateway id="s_low" name="Fewer than 10 items left?">
+      <bpmn:incoming>Flow_s_avail_s_low</bpmn:incoming>
+      <bpmn:outgoing>Flow_s_low_s_supplier</bpmn:outgoing>
+      <bpmn:outgoing>Flow_s_low_s_merge2</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sendTask id="s_supplier" name="Place order to external supplier">
+      <bpmn:incoming>Flow_s_low_s_supplier</bpmn:incoming>
+      <bpmn:outgoing>Flow_s_supplier_s_merge2</bpmn:outgoing>
+    </bpmn:sendTask>
+    <bpmn:exclusiveGateway id="s_merge2" name="">
+      <bpmn:incoming>Flow_s_supplier_s_merge2</bpmn:incoming>
+      <bpmn:incoming>Flow_s_low_s_merge2</bpmn:incoming>
+      <bpmn:outgoing>Flow_s_merge2_s_pack</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:task id="s_pack" name="Package product">
+      <bpmn:incoming>Flow_s_merge2_s_pack</bpmn:incoming>
+      <bpmn:outgoing>Flow_s_pack_s_all</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="s_all" name="All products packaged?">
+      <bpmn:incoming>Flow_s_pack_s_all</bpmn:incoming>
+      <bpmn:outgoing>Flow_s_all_s_merge1</bpmn:outgoing>
+      <bpmn:outgoing>Flow_s_all_s_ready</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sendTask id="s_ready" name="Notify customer: order ready for shipping">
+      <bpmn:incoming>Flow_s_all_s_ready</bpmn:incoming>
+      <bpmn:outgoing>Flow_s_ready_s_ship</bpmn:outgoing>
+    </bpmn:sendTask>
+    <bpmn:task id="s_ship" name="Send order to customer">
+      <bpmn:incoming>Flow_s_ready_s_ship</bpmn:incoming>
+      <bpmn:outgoing>Flow_s_ship_s_evgw</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:eventBasedGateway id="s_evgw" name="">
+      <bpmn:incoming>Flow_s_ship_s_evgw</bpmn:incoming>
+      <bpmn:outgoing>Flow_s_evgw_s_ret</bpmn:outgoing>
+      <bpmn:outgoing>Flow_s_evgw_s_week</bpmn:outgoing>
+    </bpmn:eventBasedGateway>
+    <bpmn:intermediateCatchEvent id="s_ret" name="Returned items received">
+      <bpmn:incoming>Flow_s_evgw_s_ret</bpmn:incoming>
+      <bpmn:outgoing>Flow_s_ret_s_report</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MED_s_ret" />
+    </bpmn:intermediateCatchEvent>
+    <bpmn:task id="s_report" name="Write report for returned items">
+      <bpmn:incoming>Flow_s_ret_s_report</bpmn:incoming>
+      <bpmn:outgoing>Flow_s_report_s_end_ret</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="s_end_ret" name="Process terminated (report written)">
+      <bpmn:incoming>Flow_s_report_s_end_ret</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:intermediateCatchEvent id="s_week" name="One week elapsed">
+      <bpmn:incoming>Flow_s_evgw_s_week</bpmn:incoming>
+      <bpmn:outgoing>Flow_s_week_s_record</bpmn:outgoing>
+      <bpmn:timerEventDefinition id="TED_s_week">
+        <bpmn:timeDuration xsi:type="bpmn:tFormalExpression" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">P7D</bpmn:timeDuration>
+      </bpmn:timerEventDefinition>
+    </bpmn:intermediateCatchEvent>
+    <bpmn:task id="s_record" name="Record order">
+      <bpmn:incoming>Flow_s_week_s_record</bpmn:incoming>
+      <bpmn:outgoing>Flow_s_record_s_end_ok</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="s_end_ok" name="Process terminated (order recorded)">
+      <bpmn:incoming>Flow_s_record_s_end_ok</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_s_start_s_fwd" name="" sourceRef="s_start" targetRef="s_fwd" />
+    <bpmn:sequenceFlow id="Flow_s_fwd_s_retrieve" name="" sourceRef="s_fwd" targetRef="s_retrieve" />
+    <bpmn:sequenceFlow id="Flow_s_retrieve_s_sendlist" name="" sourceRef="s_retrieve" targetRef="s_sendlist" />
+    <bpmn:sequenceFlow id="Flow_s_sendlist_s_recvorder" name="" sourceRef="s_sendlist" targetRef="s_recvorder" />
+    <bpmn:sequenceFlow id="Flow_s_recvorder_s_merge1" name="" sourceRef="s_recvorder" targetRef="s_merge1" />
+    <bpmn:sequenceFlow id="Flow_s_merge1_s_check" name="" sourceRef="s_merge1" targetRef="s_check" />
+    <bpmn:sequenceFlow id="Flow_s_check_s_avail" name="" sourceRef="s_check" targetRef="s_avail" />
+    <bpmn:sequenceFlow id="Flow_s_notify_s_recvupd" name="" sourceRef="s_notify" targetRef="s_recvupd" />
+    <bpmn:sequenceFlow id="Flow_s_supplier_s_merge2" name="" sourceRef="s_supplier" targetRef="s_merge2" />
+    <bpmn:sequenceFlow id="Flow_s_merge2_s_pack" name="" sourceRef="s_merge2" targetRef="s_pack" />
+    <bpmn:sequenceFlow id="Flow_s_pack_s_all" name="" sourceRef="s_pack" targetRef="s_all" />
+    <bpmn:sequenceFlow id="Flow_s_ready_s_ship" name="" sourceRef="s_ready" targetRef="s_ship" />
+    <bpmn:sequenceFlow id="Flow_s_ship_s_evgw" name="" sourceRef="s_ship" targetRef="s_evgw" />
+    <bpmn:sequenceFlow id="Flow_s_evgw_s_ret" name="" sourceRef="s_evgw" targetRef="s_ret" />
+    <bpmn:sequenceFlow id="Flow_s_ret_s_report" name="" sourceRef="s_ret" targetRef="s_report" />
+    <bpmn:sequenceFlow id="Flow_s_report_s_end_ret" name="" sourceRef="s_report" targetRef="s_end_ret" />
+    <bpmn:sequenceFlow id="Flow_s_evgw_s_week" name="" sourceRef="s_evgw" targetRef="s_week" />
+    <bpmn:sequenceFlow id="Flow_s_week_s_record" name="" sourceRef="s_week" targetRef="s_record" />
+    <bpmn:sequenceFlow id="Flow_s_record_s_end_ok" name="" sourceRef="s_record" targetRef="s_end_ok" />
+    <bpmn:sequenceFlow id="Flow_s_avail_s_notify" name="no" sourceRef="s_avail" targetRef="s_notify" />
+    <bpmn:sequenceFlow id="Flow_s_avail_s_low" name="yes" sourceRef="s_avail" targetRef="s_low" />
+    <bpmn:sequenceFlow id="Flow_s_recvupd_s_merge1" name="" sourceRef="s_recvupd" targetRef="s_merge1" />
+    <bpmn:sequenceFlow id="Flow_s_low_s_supplier" name="yes" sourceRef="s_low" targetRef="s_supplier" />
+    <bpmn:sequenceFlow id="Flow_s_low_s_merge2" name="no" sourceRef="s_low" targetRef="s_merge2" />
+    <bpmn:sequenceFlow id="Flow_s_all_s_merge1" name="no" sourceRef="s_all" targetRef="s_merge1" />
+    <bpmn:sequenceFlow id="Flow_s_all_s_ready" name="yes" sourceRef="s_all" targetRef="s_ready" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_1">
+      <bpmndi:BPMNShape id="Pool_Customer_di" bpmnElement="Pool_Customer" isHorizontal="true">
+        <dc:Bounds x="160" y="80" width="2840" height="270" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_Customer_di" bpmnElement="Lane_Customer" isHorizontal="true">
+        <dc:Bounds x="190" y="80" width="2810" height="270" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Pool_Store_di" bpmnElement="Pool_Store" isHorizontal="true">
+        <dc:Bounds x="160" y="390" width="2840" height="630" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_CS_di" bpmnElement="Lane_CS" isHorizontal="true">
+        <dc:Bounds x="190" y="390" width="2810" height="240" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_IM_di" bpmnElement="Lane_IM" isHorizontal="true">
+        <dc:Bounds x="190" y="630" width="2810" height="240" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_LG_di" bpmnElement="Lane_LG" isHorizontal="true">
+        <dc:Bounds x="190" y="870" width="2810" height="150" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Pool_Supplier_di" bpmnElement="Pool_Supplier" isHorizontal="true">
+        <dc:Bounds x="160" y="1060" width="2840" height="70" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="c_start_di" bpmnElement="c_start">
+        <dc:Bounds x="242" y="197" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="210" y="237" width="100" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="c_ask_di" bpmnElement="c_ask">
+        <dc:Bounds x="345" y="175" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="c_recvlist_di" bpmnElement="c_recvlist">
+        <dc:Bounds x="615" y="175" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="c_prepare_di" bpmnElement="c_prepare">
+        <dc:Bounds x="750" y="175" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="c_send_di" bpmnElement="c_send">
+        <dc:Bounds x="885" y="175" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="c_evgw_di" bpmnElement="c_evgw">
+        <dc:Bounds x="1045" y="190" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="c_oos_di" bpmnElement="c_oos">
+        <dc:Bounds x="1457" y="135" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1425" y="175" width="100" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="c_update_di" bpmnElement="c_update">
+        <dc:Bounds x="1560" y="113" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="c_ready_di" bpmnElement="c_ready">
+        <dc:Bounds x="2132" y="259" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2100" y="299" width="100" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="c_recvship_di" bpmnElement="c_recvship">
+        <dc:Bounds x="2235" y="237" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="c_gw_di" bpmnElement="c_gw" isMarkerVisible="true">
+        <dc:Bounds x="2395" y="252" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2370" y="306" width="100" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="c_return_di" bpmnElement="c_return">
+        <dc:Bounds x="2505" y="237" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="c_end_ret_di" bpmnElement="c_end_ret">
+        <dc:Bounds x="2672" y="259" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2640" y="299" width="100" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="c_end_ok_di" bpmnElement="c_end_ok">
+        <dc:Bounds x="2537" y="135" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2505" y="175" width="100" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="s_start_di" bpmnElement="s_start">
+        <dc:Bounds x="377" y="492" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="345" y="532" width="100" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="s_fwd_di" bpmnElement="s_fwd">
+        <dc:Bounds x="480" y="470" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="s_retrieve_di" bpmnElement="s_retrieve">
+        <dc:Bounds x="615" y="710" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="s_sendlist_di" bpmnElement="s_sendlist">
+        <dc:Bounds x="750" y="470" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="s_recvorder_di" bpmnElement="s_recvorder">
+        <dc:Bounds x="885" y="470" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="s_merge1_di" bpmnElement="s_merge1" isMarkerVisible="true">
+        <dc:Bounds x="1045" y="725" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="s_check_di" bpmnElement="s_check">
+        <dc:Bounds x="1155" y="710" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="s_avail_di" bpmnElement="s_avail" isMarkerVisible="true">
+        <dc:Bounds x="1315" y="725" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1290" y="779" width="100" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="s_notify_di" bpmnElement="s_notify">
+        <dc:Bounds x="1425" y="470" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="s_recvupd_di" bpmnElement="s_recvupd">
+        <dc:Bounds x="1560" y="470" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="s_low_di" bpmnElement="s_low" isMarkerVisible="true">
+        <dc:Bounds x="1450" y="725" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1425" y="779" width="100" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="s_supplier_di" bpmnElement="s_supplier">
+        <dc:Bounds x="1560" y="648" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="s_merge2_di" bpmnElement="s_merge2" isMarkerVisible="true">
+        <dc:Bounds x="1720" y="725" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="s_pack_di" bpmnElement="s_pack">
+        <dc:Bounds x="1830" y="710" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="s_all_di" bpmnElement="s_all" isMarkerVisible="true">
+        <dc:Bounds x="1990" y="725" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1965" y="779" width="100" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="s_ready_di" bpmnElement="s_ready">
+        <dc:Bounds x="2100" y="470" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="s_ship_di" bpmnElement="s_ship">
+        <dc:Bounds x="2235" y="905" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="s_evgw_di" bpmnElement="s_evgw">
+        <dc:Bounds x="2395" y="485" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="s_ret_di" bpmnElement="s_ret">
+        <dc:Bounds x="2537" y="430" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2505" y="470" width="100" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="s_report_di" bpmnElement="s_report">
+        <dc:Bounds x="2640" y="408" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="s_end_ret_di" bpmnElement="s_end_ret">
+        <dc:Bounds x="2807" y="430" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2775" y="470" width="100" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="s_week_di" bpmnElement="s_week">
+        <dc:Bounds x="2537" y="554" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2505" y="594" width="100" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="s_record_di" bpmnElement="s_record">
+        <dc:Bounds x="2640" y="532" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="s_end_ok_di" bpmnElement="s_end_ok">
+        <dc:Bounds x="2807" y="554" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2775" y="594" width="100" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_c_start_c_ask_di" bpmnElement="Flow_c_start_c_ask">
+        <di:waypoint x="278" y="215" />
+        <di:waypoint x="345" y="215" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_c_ask_c_recvlist_di" bpmnElement="Flow_c_ask_c_recvlist">
+        <di:waypoint x="445" y="215" />
+        <di:waypoint x="615" y="215" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_c_recvlist_c_prepare_di" bpmnElement="Flow_c_recvlist_c_prepare">
+        <di:waypoint x="715" y="215" />
+        <di:waypoint x="750" y="215" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_c_prepare_c_send_di" bpmnElement="Flow_c_prepare_c_send">
+        <di:waypoint x="850" y="215" />
+        <di:waypoint x="885" y="215" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_c_send_c_evgw_di" bpmnElement="Flow_c_send_c_evgw">
+        <di:waypoint x="985" y="215" />
+        <di:waypoint x="1045" y="215" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_c_evgw_c_oos_di" bpmnElement="Flow_c_evgw_c_oos">
+        <di:waypoint x="1070" y="190" />
+        <di:waypoint x="1070" y="153" />
+        <di:waypoint x="1457" y="153" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_c_oos_c_update_di" bpmnElement="Flow_c_oos_c_update">
+        <di:waypoint x="1493" y="153" />
+        <di:waypoint x="1560" y="153" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_c_update_c_evgw_di" bpmnElement="Flow_c_update_c_evgw">
+        <di:waypoint x="1610" y="113" />
+        <di:waypoint x="1610" y="94" />
+        <di:waypoint x="1070" y="94" />
+        <di:waypoint x="1070" y="190" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_c_evgw_c_ready_di" bpmnElement="Flow_c_evgw_c_ready">
+        <di:waypoint x="1070" y="240" />
+        <di:waypoint x="1070" y="277" />
+        <di:waypoint x="2132" y="277" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_c_ready_c_recvship_di" bpmnElement="Flow_c_ready_c_recvship">
+        <di:waypoint x="2168" y="277" />
+        <di:waypoint x="2235" y="277" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_c_recvship_c_gw_di" bpmnElement="Flow_c_recvship_c_gw">
+        <di:waypoint x="2335" y="277" />
+        <di:waypoint x="2395" y="277" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_c_gw_c_return_di" bpmnElement="Flow_c_gw_c_return">
+        <di:waypoint x="2445" y="277" />
+        <di:waypoint x="2505" y="277" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2449" y="257" width="60" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_c_return_c_end_ret_di" bpmnElement="Flow_c_return_c_end_ret">
+        <di:waypoint x="2605" y="277" />
+        <di:waypoint x="2672" y="277" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_c_gw_c_end_ok_di" bpmnElement="Flow_c_gw_c_end_ok">
+        <di:waypoint x="2420" y="252" />
+        <di:waypoint x="2420" y="153" />
+        <di:waypoint x="2537" y="153" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2424" y="133" width="60" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_s_start_s_fwd_di" bpmnElement="Flow_s_start_s_fwd">
+        <di:waypoint x="413" y="510" />
+        <di:waypoint x="480" y="510" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_s_fwd_s_retrieve_di" bpmnElement="Flow_s_fwd_s_retrieve">
+        <di:waypoint x="580" y="510" />
+        <di:waypoint x="598" y="510" />
+        <di:waypoint x="598" y="750" />
+        <di:waypoint x="615" y="750" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_s_retrieve_s_sendlist_di" bpmnElement="Flow_s_retrieve_s_sendlist">
+        <di:waypoint x="715" y="750" />
+        <di:waypoint x="732" y="750" />
+        <di:waypoint x="732" y="510" />
+        <di:waypoint x="750" y="510" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_s_sendlist_s_recvorder_di" bpmnElement="Flow_s_sendlist_s_recvorder">
+        <di:waypoint x="850" y="510" />
+        <di:waypoint x="885" y="510" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_s_recvorder_s_merge1_di" bpmnElement="Flow_s_recvorder_s_merge1">
+        <di:waypoint x="985" y="510" />
+        <di:waypoint x="1070" y="510" />
+        <di:waypoint x="1070" y="725" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_s_merge1_s_check_di" bpmnElement="Flow_s_merge1_s_check">
+        <di:waypoint x="1095" y="750" />
+        <di:waypoint x="1155" y="750" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_s_check_s_avail_di" bpmnElement="Flow_s_check_s_avail">
+        <di:waypoint x="1255" y="750" />
+        <di:waypoint x="1315" y="750" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_s_notify_s_recvupd_di" bpmnElement="Flow_s_notify_s_recvupd">
+        <di:waypoint x="1525" y="510" />
+        <di:waypoint x="1560" y="510" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_s_supplier_s_merge2_di" bpmnElement="Flow_s_supplier_s_merge2">
+        <di:waypoint x="1660" y="688" />
+        <di:waypoint x="1745" y="688" />
+        <di:waypoint x="1745" y="725" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_s_merge2_s_pack_di" bpmnElement="Flow_s_merge2_s_pack">
+        <di:waypoint x="1770" y="750" />
+        <di:waypoint x="1830" y="750" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_s_pack_s_all_di" bpmnElement="Flow_s_pack_s_all">
+        <di:waypoint x="1930" y="750" />
+        <di:waypoint x="1990" y="750" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_s_ready_s_ship_di" bpmnElement="Flow_s_ready_s_ship">
+        <di:waypoint x="2200" y="510" />
+        <di:waypoint x="2218" y="510" />
+        <di:waypoint x="2218" y="945" />
+        <di:waypoint x="2235" y="945" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_s_ship_s_evgw_di" bpmnElement="Flow_s_ship_s_evgw">
+        <di:waypoint x="2335" y="945" />
+        <di:waypoint x="2420" y="945" />
+        <di:waypoint x="2420" y="535" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_s_evgw_s_ret_di" bpmnElement="Flow_s_evgw_s_ret">
+        <di:waypoint x="2420" y="485" />
+        <di:waypoint x="2420" y="448" />
+        <di:waypoint x="2537" y="448" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_s_ret_s_report_di" bpmnElement="Flow_s_ret_s_report">
+        <di:waypoint x="2573" y="448" />
+        <di:waypoint x="2640" y="448" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_s_report_s_end_ret_di" bpmnElement="Flow_s_report_s_end_ret">
+        <di:waypoint x="2740" y="448" />
+        <di:waypoint x="2807" y="448" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_s_evgw_s_week_di" bpmnElement="Flow_s_evgw_s_week">
+        <di:waypoint x="2420" y="535" />
+        <di:waypoint x="2420" y="572" />
+        <di:waypoint x="2537" y="572" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_s_week_s_record_di" bpmnElement="Flow_s_week_s_record">
+        <di:waypoint x="2573" y="572" />
+        <di:waypoint x="2640" y="572" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_s_record_s_end_ok_di" bpmnElement="Flow_s_record_s_end_ok">
+        <di:waypoint x="2740" y="572" />
+        <di:waypoint x="2807" y="572" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_s_avail_s_notify_di" bpmnElement="Flow_s_avail_s_notify">
+        <di:waypoint x="1340" y="725" />
+        <di:waypoint x="1340" y="510" />
+        <di:waypoint x="1425" y="510" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1344" y="490" width="60" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_s_avail_s_low_di" bpmnElement="Flow_s_avail_s_low">
+        <di:waypoint x="1365" y="750" />
+        <di:waypoint x="1450" y="750" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1369" y="730" width="60" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_s_recvupd_s_merge1_di" bpmnElement="Flow_s_recvupd_s_merge1">
+        <di:waypoint x="1610" y="470" />
+        <di:waypoint x="1610" y="404" />
+        <di:waypoint x="1070" y="404" />
+        <di:waypoint x="1070" y="725" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_s_low_s_supplier_di" bpmnElement="Flow_s_low_s_supplier">
+        <di:waypoint x="1475" y="725" />
+        <di:waypoint x="1475" y="688" />
+        <di:waypoint x="1560" y="688" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1479" y="668" width="60" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_s_low_s_merge2_di" bpmnElement="Flow_s_low_s_merge2">
+        <di:waypoint x="1500" y="750" />
+        <di:waypoint x="1720" y="750" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1504" y="730" width="60" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_s_all_s_merge1_di" bpmnElement="Flow_s_all_s_merge1">
+        <di:waypoint x="2015" y="775" />
+        <di:waypoint x="2015" y="856" />
+        <di:waypoint x="1070" y="856" />
+        <di:waypoint x="1070" y="775" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2019" y="836" width="60" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_s_all_s_ready_di" bpmnElement="Flow_s_all_s_ready">
+        <di:waypoint x="2015" y="725" />
+        <di:waypoint x="2015" y="510" />
+        <di:waypoint x="2100" y="510" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2019" y="490" width="60" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Msg_c_ask_s_start_di" bpmnElement="Msg_c_ask_s_start">
+        <di:waypoint x="395" y="255" />
+        <di:waypoint x="395" y="492" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Msg_s_sendlist_c_recvlist_di" bpmnElement="Msg_s_sendlist_c_recvlist">
+        <di:waypoint x="800" y="470" />
+        <di:waypoint x="800" y="370" />
+        <di:waypoint x="665" y="370" />
+        <di:waypoint x="665" y="255" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Msg_c_send_s_recvorder_di" bpmnElement="Msg_c_send_s_recvorder">
+        <di:waypoint x="935" y="255" />
+        <di:waypoint x="935" y="470" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Msg_s_notify_c_oos_di" bpmnElement="Msg_s_notify_c_oos">
+        <di:waypoint x="1475" y="470" />
+        <di:waypoint x="1475" y="171" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Msg_c_update_s_recvupd_di" bpmnElement="Msg_c_update_s_recvupd">
+        <di:waypoint x="1610" y="193" />
+        <di:waypoint x="1610" y="470" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Msg_s_ready_c_ready_di" bpmnElement="Msg_s_ready_c_ready">
+        <di:waypoint x="2150" y="470" />
+        <di:waypoint x="2150" y="295" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Msg_s_ship_c_recvship_di" bpmnElement="Msg_s_ship_c_recvship">
+        <di:waypoint x="2285" y="905" />
+        <di:waypoint x="2285" y="317" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Msg_c_return_s_ret_di" bpmnElement="Msg_c_return_s_ret">
+        <di:waypoint x="2555" y="317" />
+        <di:waypoint x="2555" y="430" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Msg_s_supplier_Pool_Supplier_di" bpmnElement="Msg_s_supplier_Pool_Supplier">
+        <di:waypoint x="1610" y="728" />
+        <di:waypoint x="1610" y="1060" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

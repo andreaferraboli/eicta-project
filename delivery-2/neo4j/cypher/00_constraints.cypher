@@ -1,0 +1,10 @@
+// Uniqueness constraints: same keys as the primary keys of delivery 1.
+CREATE CONSTRAINT festival_name IF NOT EXISTS FOR (n:Festival) REQUIRE n.name IS UNIQUE;
+CREATE CONSTRAINT stage_code IF NOT EXISTS FOR (n:Stage) REQUIRE n.code IS UNIQUE;
+CREATE CONSTRAINT performance_id IF NOT EXISTS FOR (n:Performance) REQUIRE n.performanceId IS UNIQUE;
+CREATE CONSTRAINT artist_stage_name IF NOT EXISTS FOR (n:Artist) REQUIRE n.stageName IS UNIQUE;
+CREATE CONSTRAINT stand_name IF NOT EXISTS FOR (n:Stand) REQUIRE n.name IS UNIQUE;
+CREATE CONSTRAINT product_name IF NOT EXISTS FOR (n:Product) REQUIRE n.name IS UNIQUE;
+CREATE CONSTRAINT person_email IF NOT EXISTS FOR (n:Person) REQUIRE n.email IS UNIQUE;
+CREATE CONSTRAINT purchase_id IF NOT EXISTS FOR (n:Purchase) REQUIRE n.purchaseId IS UNIQUE;
+CREATE CONSTRAINT ticket_id IF NOT EXISTS FOR (n:Ticket) REQUIRE n.ticketId IS UNIQUE;

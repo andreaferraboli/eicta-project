@@ -1,0 +1,27 @@
+{
+  "table": "Purchase",
+  "rows": 30,
+  "status": "checklist for the Mockaroo UI, not an importable Mockaroo file",
+  "fields": [
+    {
+      "name": "PurchaseID",
+      "mockaroo_type": "Row Number",
+      "constraint": "PK"
+    },
+    {
+      "name": "PurchaseDate",
+      "mockaroo_type": "Date",
+      "constraint": ""
+    },
+    {
+      "name": "PaymentMethod",
+      "mockaroo_type": "Custom List",
+      "constraint": ""
+    },
+    {
+      "name": "PersonEmail",
+      "mockaroo_type": "Dataset Column -> Person.Email",
+      "constraint": "FK"
+    }
+  ]
+}

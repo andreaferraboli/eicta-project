@@ -1,0 +1,17 @@
+{
+  "table": "PerformanceArtist",
+  "rows": 30,
+  "status": "checklist for the Mockaroo UI, not an importable Mockaroo file",
+  "fields": [
+    {
+      "name": "PerformanceID",
+      "mockaroo_type": "Dataset Column -> Performance.PerformanceID",
+      "constraint": "PK, FK; >= 1 per performance"
+    },
+    {
+      "name": "ArtistStageName",
+      "mockaroo_type": "Dataset Column -> Artist.StageName",
+      "constraint": "PK, FK"
+    }
+  ]
+}

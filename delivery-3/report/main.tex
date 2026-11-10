@@ -1,0 +1,83 @@
+%% Delivery 3 report, MAX 30 PAGES. List of Figures/Tables may be omitted (PDF 3, p. 3)
+%% PROVISIONAL TEMPLATE generated for the EICTA project.
+%% The official templates (MS Word / LaTeX) are linked in ASSIGNMENT.md and are NOT in this repository.
+%% Replace this preamble with the official one as soon as it is downloaded (requirement D1-DEL-9).
+\documentclass[11pt,a4paper]{report}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{caption}
+\usepackage[hidelinks]{hyperref}
+
+\graphicspath{{figures/}}
+\setcounter{secnumdepth}{2}
+
+%% Placeholders: visible in red, easy to find with a search for "TODO".
+\newcommand{\todo}[1]{\textcolor{red}{\textbf{TODO:} #1}}
+
+%% \evidence{file}{caption}{label}: includes figures/<file> when it exists,
+%% otherwise prints a red box saying which evidence is missing. No fake images.
+\newcommand{\evidence}[3]{%
+  \begin{figure}[H]
+    \centering
+    \IfFileExists{figures/#1}{%
+      \includegraphics[width=\linewidth,height=0.42\textheight,keepaspectratio]{#1}%
+    }{%
+      \fbox{\parbox[c][3cm][c]{0.85\linewidth}{\centering\textcolor{red}{\textbf{TODO: missing evidence}}\\[2pt]\texttt{figures/\detokenize{#1}}}}%
+    }
+    \caption{#2}
+    \label{#3}
+  \end{figure}}
+
+\lstdefinelanguage{Cypher}{
+  morekeywords={MATCH,OPTIONAL,WHERE,RETURN,WITH,CREATE,MERGE,SET,DELETE,DETACH,REMOVE,ORDER,BY,LIMIT,SKIP,AS,AND,OR,NOT,XOR,IN,DISTINCT,UNWIND,CALL,FOREACH,CASE,WHEN,THEN,ELSE,END,EXISTS,COUNT,LOAD,CSV,HEADERS,FROM,DESC,ASC,shortestPath},
+  sensitive=false, morecomment=[l]{//}, morestring=[b]', morestring=[b]"}
+\lstdefinelanguage{MongoJS}{
+  morekeywords={const,let,var,function,return,true,false,null},
+  sensitive=true, morecomment=[l]{//}, morecomment=[s]{/*}{*/}, morestring=[b]", morestring=[b]'}
+\lstset{basicstyle=\ttfamily\footnotesize, breaklines=true, frame=single, columns=fullflexible,
+        keywordstyle=\color{blue!70!black}\bfseries, commentstyle=\color{gray}, stringstyle=\color{teal},
+        showstringspaces=false, inputencoding=utf8}
+
+\begin{document}
+
+\begin{titlepage}
+  \centering
+  {\Large Politecnico di Milano\par}
+  \vspace{0.5cm}
+  {\large EICTA \textendash{} Project\par}
+  \vspace{2.5cm}
+  {\Huge\bfseries Third Project Delivery: MongoDB and Web\par}
+  \vspace{0.6cm}
+  {\Large Euphoric Events\par}
+  \vspace{2cm}
+  {\large Group \todo{group number}\par}
+  \vspace{1cm}
+  \begin{tabular}{lll}
+    \toprule
+    Name & Surname & Personal code \\
+    \midrule
+    \todo{name} & \todo{surname} & \todo{code} \\
+    \todo{name} & \todo{surname} & \todo{code} \\
+    \todo{name} & \todo{surname} & \todo{code} \\
+    \bottomrule
+  \end{tabular}
+  \vfill
+  {\large Academic year \todo{20XX/20XX}\par}
+\end{titlepage}
+
+\tableofcontents
+
+\input{chapters/01-document-structure}
+\input{chapters/02-queries}
+\input{chapters/03-web-static}
+\input{chapters/04-web-auth}
+
+\end{document}

@@ -1,0 +1,38 @@
+# Build output: databases, dumps, CSV, query outputs, compiled reports, ZIPs
+build/
+
+# Course PDFs (the instructions are in ASSIGNMENT.md files)
+*.pdf
+*.zip
+
+# Local settings and secrets (never commit)
+.env
+.env.*
+
+# Node
+node_modules/
+
+# Local SQLite file of the web-auth task (created at run time or exported from SQLite Online)
+delivery-3/web-auth/db/*.db
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+
+# LaTeX
+*.aux
+*.log
+*.out
+*.toc
+*.lof
+*.lot
+*.synctex.gz
+*.fdb_latexmk
+*.fls
+
+# OS / editors
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

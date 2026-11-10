@@ -1,0 +1,22 @@
+{
+  "table": "Person",
+  "rows": 30,
+  "status": "checklist for the Mockaroo UI, not an importable Mockaroo file",
+  "fields": [
+    {
+      "name": "Email",
+      "mockaroo_type": "Email Address, unique",
+      "constraint": "PK"
+    },
+    {
+      "name": "FullName",
+      "mockaroo_type": "Full Name",
+      "constraint": ""
+    },
+    {
+      "name": "Phone",
+      "mockaroo_type": "Phone",
+      "constraint": ""
+    }
+  ]
+}

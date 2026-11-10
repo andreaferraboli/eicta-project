@@ -1,0 +1,42 @@
+{
+  "table": "Ticket",
+  "rows": 30,
+  "status": "checklist for the Mockaroo UI, not an importable Mockaroo file",
+  "fields": [
+    {
+      "name": "TicketID",
+      "mockaroo_type": "Row Number",
+      "constraint": "PK"
+    },
+    {
+      "name": "Type",
+      "mockaroo_type": "Custom List: regular, day pass, VIP",
+      "constraint": ""
+    },
+    {
+      "name": "Price",
+      "mockaroo_type": "Number",
+      "constraint": ">= 0"
+    },
+    {
+      "name": "ValidFrom",
+      "mockaroo_type": "Date",
+      "constraint": "inside festival dates"
+    },
+    {
+      "name": "ValidTo",
+      "mockaroo_type": "Date",
+      "constraint": ">= ValidFrom"
+    },
+    {
+      "name": "FestivalName",
+      "mockaroo_type": "Dataset Column -> Festival.Name",
+      "constraint": "FK"
+    },
+    {
+      "name": "PurchaseID",
+      "mockaroo_type": "Dataset Column -> Purchase.PurchaseID",
+      "constraint": "FK"
+    }
+  ]
+}

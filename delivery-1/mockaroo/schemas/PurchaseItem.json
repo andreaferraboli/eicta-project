@@ -1,0 +1,22 @@
+{
+  "table": "PurchaseItem",
+  "rows": 30,
+  "status": "checklist for the Mockaroo UI, not an importable Mockaroo file",
+  "fields": [
+    {
+      "name": "PurchaseID",
+      "mockaroo_type": "Dataset Column -> Purchase.PurchaseID",
+      "constraint": "PK, FK"
+    },
+    {
+      "name": "StandName",
+      "mockaroo_type": "Dataset Column -> Sells.StandName",
+      "constraint": "PK, FK (pair must exist in Sells)"
+    },
+    {
+      "name": "ProductName",
+      "mockaroo_type": "Dataset Column -> Sells.ProductName (same row)",
+      "constraint": "PK, FK"
+    }
+  ]
+}

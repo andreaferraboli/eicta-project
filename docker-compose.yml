@@ -1,0 +1,55 @@
+# Local services for deliveries 2 (Neo4j) and 3 (MongoDB).
+# Delivery 1 uses SQLite (allowed by the PDF via SQLite Online) and needs no container.
+#
+# Start:  python scripts/eicta.py up
+# Ports are bound to 127.0.0.1 only. Versions are pinned (no "latest").
+# Variables: local-only defaults below, overridable via environment or a .env file
+# you create yourself (see README, "Configuration"). Never commit .env.
+
+name: eicta
+
+services:
+  neo4j:
+    image: neo4j:5.26.12-community
+    environment:
+      NEO4J_AUTH: neo4j/${NEO4J_PASSWORD:-eicta-local-dev}
+      NEO4J_server_memory_heap_max__size: 512m
+      NEO4J_server_memory_pagecache_size: 256m
+      NEO4J_dbms_security_auth__minimum__password__length: "8"
+    ports:
+      - "127.0.0.1:${NEO4J_HTTP_PORT:-7474}:7474"
+      - "127.0.0.1:${NEO4J_BOLT_PORT:-7687}:7687"
+    volumes:
+      - neo4j-data:/data
+      - ./build/delivery-2/neo4j-import:/import:ro
+      - ./build/delivery-2/neo4j-dump:/backups
+      - ./delivery-2/neo4j/cypher:/cypher:ro
+    healthcheck:
+      test: ["CMD-SHELL", "cypher-shell -u neo4j -p \"$${NEO4J_AUTH#neo4j/}\" 'RETURN 1' >/dev/null 2>&1"]
+      interval: 10s
+      timeout: 10s
+      retries: 18
+      start_period: 20s
+
+  mongo:
+    image: mongo:7.0.14
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USERNAME:-eicta}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD:-eicta-local-dev}
+    ports:
+      - "127.0.0.1:${MONGO_PORT:-27018}:27017"
+    volumes:
+      - mongo-data:/data/db
+      - ./build/delivery-3/mongo-seed:/seed:ro
+      - ./build/delivery-3/mongo-dump:/dump
+      - ./delivery-3/mongodb:/scripts:ro
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 10s
+
+volumes:
+  neo4j-data:
+  mongo-data:

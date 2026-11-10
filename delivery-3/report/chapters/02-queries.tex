@@ -1,0 +1,125 @@
+\chapter{Queries}
+\section*{Create, update and delete}
+\addcontentsline{toc}{section}{Create, update and delete}
+\section{Insert a new festival document}
+\textbf{Requirement:} create.
+
+\textbf{Description.} Inserts a complete festival with 2 stages, 2 performances per stage, 2 artists per performance and 2 stands with 2 products each (no array has fewer than 2 elements). \todo{review and expand the description}
+
+\lstinputlisting[language=MongoJS,firstline=8,lastline=66]{../mongodb/queries/write/w01_insert_festival.js}
+\evidence{w01_insert_festival.png}{Result of the query ``Insert a new festival document''.}{fig:w01_insert_festival}
+
+\section{Increase capacity of the Chalet Stage}
+\textbf{Requirement:} update.
+
+\textbf{Description.} Uses an array filter to update only the stage with code STW01B inside the new festival. \todo{review and expand the description}
+
+\lstinputlisting[language=MongoJS,firstline=8,lastline=12]{../mongodb/queries/write/w02_update_stage_capacity.js}
+\evidence{w02_update_stage_capacity.png}{Result of the query ``Increase capacity of the Chalet Stage''.}{fig:w02_update_stage_capacity}
+
+\section{Discount all merchandise by 10\%}
+\textbf{Requirement:} update.
+
+\textbf{Description.} updateMany with the all-positional operator on stands and a filtered positional operator on products, multiplying merchandise prices by 0.9. \todo{review and expand the description}
+
+\lstinputlisting[language=MongoJS,firstline=8,lastline=12]{../mongodb/queries/write/w03_update_merchandise_prices.js}
+\evidence{w03_update_merchandise_prices.png}{Result of the query ``Discount all merchandise by 10\%''.}{fig:w03_update_merchandise_prices}
+
+\section{Add a product to a stand}
+\textbf{Requirement:} update.
+
+\textbf{Description.} Pushes a new food product into the products array of the Demo Hot Drinks stand. \todo{review and expand the description}
+
+\lstinputlisting[language=MongoJS,firstline=8,lastline=12]{../mongodb/queries/write/w04_push_product.js}
+\evidence{w04_push_product.png}{Result of the query ``Add a product to a stand''.}{fig:w04_push_product}
+
+\section{Delete the demo festival}
+\textbf{Requirement:} delete.
+
+\textbf{Description.} Deletes the document inserted by w01. \todo{review and expand the description}
+
+\lstinputlisting[language=MongoJS,firstline=8,lastline=8]{../mongodb/queries/write/w05_delete_festival.js}
+\evidence{w05_delete_festival.png}{Result of the query ``Delete the demo festival''.}{fig:w05_delete_festival}
+
+\section*{Retrieval}
+\addcontentsline{toc}{section}{Retrieval}
+\section{Festivals in Milano or Roma}
+\textbf{Requirement:} projections + logical query operators (1/2).
+
+\textbf{Description.} Uses \$or to select festivals located in Milano or Roma and a projection to return only name, location and start date. \todo{review and expand the description}
+
+\lstinputlisting[language=MongoJS,firstline=8,lastline=11]{../mongodb/queries/read/r01_projection_logical_or.js}
+\evidence{r01_projection_logical_or.png}{Result of the query ``Festivals in Milano or Roma''.}{fig:r01_projection_logical_or}
+
+\section{Festivals sponsored by Blue Bank outside the south}
+\textbf{Requirement:} projections + logical query operators (2/2).
+
+\textbf{Description.} Combines \$and and \$nor: festivals with at least one stand sponsored by Blue Bank that are not in Napoli, Bari or Palermo. Projects name, location and stand names. \todo{review and expand the description}
+
+\lstinputlisting[language=MongoJS,firstline=8,lastline=14]{../mongodb/queries/read/r02_projection_logical_and_nor.js}
+\evidence{r02_projection_logical_and_nor.png}{Result of the query ``Festivals sponsored by Blue Bank outside the south''.}{fig:r02_projection_logical_and_nor}
+
+\section{First five festivals with a big stage}
+\textbf{Requirement:} limit + sort + comparison query operators (1/2).
+
+\textbf{Description.} Festivals having at least one stage with capacity >= 5000 (\$gte), sorted by start date, first five. \todo{review and expand the description}
+
+\lstinputlisting[language=MongoJS,firstline=8,lastline=11]{../mongodb/queries/read/r03_limit_sort_comparison_capacity.js}
+\evidence{r03_limit_sort_comparison_capacity.png}{Result of the query ``First five festivals with a big stage''.}{fig:r03_limit_sort_comparison_capacity}
+
+\section{Last three early-summer festivals by name}
+\textbf{Requirement:} limit + sort + comparison query operators (2/2).
+
+\textbf{Description.} Festivals starting before 1 August 2026 (\$lt) and not in Torino (\$ne), sorted by name descending, first three. \todo{review and expand the description}
+
+\lstinputlisting[language=MongoJS,firstline=8,lastline=11]{../mongodb/queries/read/r04_limit_sort_comparison_dates.js}
+\evidence{r04_limit_sort_comparison_dates.png}{Result of the query ``Last three early-summer festivals by name''.}{fig:r04_limit_sort_comparison_dates}
+
+\section{Festivals hosting bands and selling typed food}
+\textbf{Requirement:} element query operators.
+
+\textbf{Description.} \$exists finds festivals where at least one performing artist has a formationYear (that is, a band); \$type checks that a foodType string is present in some product. \todo{review and expand the description}
+
+\lstinputlisting[language=MongoJS,firstline=8,lastline=14]{../mongodb/queries/read/r05_element_operators.js}
+\evidence{r05_element_operators.png}{Result of the query ``Festivals hosting bands and selling typed food''.}{fig:r05_element_operators}
+
+\section{Festivals per city}
+\textbf{Requirement:} group operator.
+
+\textbf{Description.} Groups the festivals by location, counting them and taking the earliest start date. \todo{review and expand the description}
+
+\lstinputlisting[language=MongoJS,firstline=8,lastline=11]{../mongodb/queries/read/r06_group_festivals_per_city.js}
+\evidence{r06_group_festivals_per_city.png}{Result of the query ``Festivals per city''.}{fig:r06_group_festivals_per_city}
+
+\section{Total stage capacity per festival}
+\textbf{Requirement:} unwind + group by.
+
+\textbf{Description.} Unwinds the stages array and groups by festival, counting stages and summing their capacity. \todo{review and expand the description}
+
+\lstinputlisting[language=MongoJS,firstline=8,lastline=12]{../mongodb/queries/read/r07_unwind_group_capacity.js}
+\evidence{r07_unwind_group_capacity.png}{Result of the query ``Total stage capacity per festival''.}{fig:r07_unwind_group_capacity}
+
+\section{Genres with at least 10 performances}
+\textbf{Requirement:} unwind + group by + filter.
+
+\textbf{Description.} Unwinds stages and performances, groups by genre counting the performances, then filters (\$match after \$group) the genres with at least 10. \todo{review and expand the description}
+
+\lstinputlisting[language=MongoJS,firstline=8,lastline=14]{../mongodb/queries/read/r08_unwind_group_filter_genres.js}
+\evidence{r08_unwind_group_filter_genres.png}{Result of the query ``Genres with at least 10 performances''.}{fig:r08_unwind_group_filter_genres}
+
+\section{Festivals with a Main Stage and some small stage}
+\textbf{Requirement:} two conditions evaluated separately on array sub-documents.
+
+\textbf{Description.} Two conditions on the stages array WITHOUT \$elemMatch: one stage can be named Main Stage and a DIFFERENT stage can have capacity below 1000. \todo{review and expand the description}
+
+\lstinputlisting[language=MongoJS,firstline=8,lastline=11]{../mongodb/queries/read/r09_array_conditions_separately.js}
+\evidence{r09_array_conditions_separately.png}{Result of the query ``Festivals with a Main Stage and some small stage''.}{fig:r09_array_conditions_separately}
+
+\section{Festivals whose Main Stage is small}
+\textbf{Requirement:} two conditions evaluated simultaneously on array sub-documents.
+
+\textbf{Description.} Same two conditions with \$elemMatch: the SAME stage must be named Main Stage and have capacity below 1000. \todo{review and expand the description}
+
+\lstinputlisting[language=MongoJS,firstline=8,lastline=11]{../mongodb/queries/read/r10_array_conditions_elemmatch.js}
+\evidence{r10_array_conditions_elemmatch.png}{Result of the query ``Festivals whose Main Stage is small''.}{fig:r10_array_conditions_elemmatch}
+
